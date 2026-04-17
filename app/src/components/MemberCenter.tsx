@@ -2,6 +2,7 @@ import { useState } from 'react'
 import MemberInfoPanel from './MemberInfoPanel'
 import TaskCenter from './TaskCenter'
 import OrderManagement from './OrderManagement'
+import type { CertificationInfo, MemberLevel } from './InvoiceDialog'
 
 export type TabKey = 'cert' | 'coupon' | 'code' | 'discount' | 'upgrade' | 'task' | 'order'
 
@@ -119,6 +120,17 @@ export default function MemberCenter() {
   const [orders] = useState<OrderItem[]>(mockOrders)
   const [selectedOrderIds, setSelectedOrderIds] = useState<Set<string>>(new Set())
 
+  // 认证信息（mock，实际从后端获取）
+  // 切换以下值测试不同场景：'none' | 'personal' | 'enterprise'
+  const [certStatus] = useState<CertificationInfo['status']>('personal')
+  const [memberLevel] = useState<MemberLevel>('普通会员')
+
+  const certInfo: CertificationInfo = certStatus === 'personal'
+    ? { status: 'personal', personalName: '张三', personalIdNo: '110101199001011234' }
+    : certStatus === 'enterprise'
+      ? { status: 'enterprise', companyName: '某某科技有限公司', taxNo: '91110000XXXXXXXXXX' }
+      : { status: 'none' }
+
   return (
     <div className="max-w-[1400px] mx-auto p-6">
       {/* Header */}
@@ -168,6 +180,8 @@ export default function MemberCenter() {
                 orders={orders}
                 selectedOrderIds={selectedOrderIds}
                 setSelectedOrderIds={setSelectedOrderIds}
+                memberLevel={memberLevel}
+                certInfo={certInfo}
               />
             ) : (
               <EmptyPanel title={

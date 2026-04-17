@@ -1,17 +1,24 @@
 import { useState, useMemo } from 'react'
 import InvoiceDialog from './InvoiceDialog'
 import type { OrderItem } from './MemberCenter'
+import type { CertificationInfo, MemberLevel } from './InvoiceDialog'
 
 interface OrderManagementProps {
   orders: OrderItem[]
   selectedOrderIds: Set<string>
   setSelectedOrderIds: (ids: Set<string>) => void
+  memberLevel?: MemberLevel
+  certInfo?: CertificationInfo
+  onGoToCert?: () => void
 }
 
 export default function OrderManagement({
   orders,
   selectedOrderIds,
   setSelectedOrderIds,
+  memberLevel,
+  certInfo,
+  onGoToCert,
 }: OrderManagementProps) {
   const [statusFilter, setStatusFilter] = useState('全部')
   const [searchKeyword, setSearchKeyword] = useState('')
@@ -269,6 +276,9 @@ export default function OrderManagement({
           onClose={() => setShowInvoiceDialog(false)}
           selectedAmount={selectedTotalAmount}
           selectedCount={selectedOrdersForInvoice.length}
+          memberLevel={memberLevel}
+          certInfo={certInfo}
+          onGoToCert={onGoToCert}
         />
       )}
     </div>
