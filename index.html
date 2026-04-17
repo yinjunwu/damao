@@ -1,0 +1,2418 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>会员中心 - 医启诊</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', sans-serif;
+            background-color: #f5f6fa;
+            color: #333;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 24px;
+        }
+
+        /* Header */
+        .header {
+            background: #fff;
+            border-radius: 12px;
+            padding: 28px 32px;
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .header-left h1 {
+            font-size: 24px;
+            font-weight: 600;
+            color: #1a1a2e;
+            margin-bottom: 4px;
+        }
+
+        .header-left p {
+            font-size: 14px;
+            color: #888;
+        }
+
+        .btn-primary {
+            background: #5865f2;
+            color: #fff;
+            border: none;
+            padding: 10px 24px;
+            border-radius: 8px;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .btn-primary:hover {
+            background: #4752c4;
+        }
+
+        .btn-disabled {
+            background: #e0e0e0;
+            color: #999;
+            cursor: not-allowed;
+        }
+
+        .btn-disabled:hover {
+            background: #e0e0e0;
+        }
+
+        /* Main Content */
+        .main-content {
+            display: flex;
+            gap: 20px;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            width: 360px;
+            flex-shrink: 0;
+        }
+
+        .card {
+            background: #fff;
+            border-radius: 12px;
+            padding: 24px;
+            margin-bottom: 20px;
+        }
+
+        .card-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: #1a1a2e;
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .card-title svg {
+            width: 18px;
+            height: 18px;
+        }
+
+        /* User Info */
+        .user-info-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 12px 0;
+            border-bottom: 1px solid #f0f0f0;
+        }
+
+        .user-info-item:last-child {
+            border-bottom: none;
+        }
+
+        .user-label {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 14px;
+            color: #666;
+        }
+
+        .user-value {
+            text-align: right;
+        }
+
+        .user-name {
+            font-size: 15px;
+            font-weight: 500;
+            color: #333;
+        }
+
+        .user-date {
+            font-size: 13px;
+            color: #999;
+            margin-top: 2px;
+        }
+
+        .cert-btn {
+            padding: 6px 16px;
+            border-radius: 6px;
+            font-size: 13px;
+            cursor: pointer;
+            transition: all 0.3s;
+            border: none;
+            white-space: nowrap;
+            margin-left: 10px;
+        }
+
+        .cert-btn-active {
+            background: linear-gradient(135deg, #5865f2, #7c83ff);
+            color: #fff;
+        }
+
+        .cert-btn-active:hover {
+            background: linear-gradient(135deg, #4752c4, #636cd9);
+        }
+
+        .cert-btn-done {
+            background: #f0f2f5;
+            color: #999;
+            cursor: not-allowed;
+        }
+
+        /* Permission Items */
+        .perm-section-title {
+            font-size: 14px;
+            font-weight: 600;
+            color: #1a1a2e;
+            margin: 20px 0 12px;
+        }
+
+        .perm-item {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            padding: 14px;
+            background: #fafbfc;
+            border-radius: 10px;
+            margin-bottom: 10px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .perm-item:hover {
+            background: #f0f2f7;
+        }
+
+        .perm-icon {
+            width: 44px;
+            height: 44px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            flex-shrink: 0;
+        }
+
+        .perm-icon.chat { background: #eef2ff; }
+        .perm-icon.guide { background: #f0f9ff; }
+        .perm-icon.report { background: #fef3e7; }
+
+        .perm-text h4 {
+            font-size: 15px;
+            font-weight: 500;
+            color: #1a1a2e;
+            margin-bottom: 2px;
+        }
+
+        .perm-text span {
+            font-size: 13px;
+            color: #52c41a;
+        }
+
+        .btn-upgrade {
+            width: 100%;
+            background: linear-gradient(135deg, #5865f2, #7c83ff);
+            color: #fff;
+            border: none;
+            padding: 14px;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: 500;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            transition: all 0.3s;
+        }
+
+        .btn-upgrade:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(88, 101, 242, 0.35);
+        }
+
+        /* Right Panel */
+        .right-panel {
+            flex: 1;
+            min-width: 0;
+        }
+
+        /* Tabs */
+        .tabs {
+            display: flex;
+            background: #fff;
+            border-radius: 12px 12px 0 0;
+            padding: 0 24px;
+            gap: 0;
+        }
+
+        .tab-item {
+            padding: 18px 20px;
+            font-size: 14px;
+            color: #666;
+            cursor: pointer;
+            position: relative;
+            transition: all 0.2s;
+            border-bottom: 2px solid transparent;
+        }
+
+        .tab-item:hover {
+            color: #333;
+        }
+
+        .tab-item.active {
+            color: #5865f2;
+            font-weight: 500;
+            border-bottom-color: #5865f2;
+        }
+
+        /* Tab Content */
+        .tab-content {
+            background: #fff;
+            border-radius: 0 0 12px 12px;
+            padding: 24px;
+        }
+
+        .toolbar {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+
+        .dropdown {
+            padding: 8px 14px;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 14px;
+            color: #333;
+            background: #fff;
+            cursor: pointer;
+        }
+
+        .search-box {
+            flex: 1;
+            position: relative;
+        }
+
+        .search-box input {
+            width: 100%;
+            padding: 8px 14px 8px 38px;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 14px;
+            outline: none;
+        }
+
+        .search-box input:focus {
+            border-color: #5865f2;
+        }
+
+        .search-box::before {
+            content: "🔍";
+            position: absolute;
+            left: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 14px;
+        }
+
+        .toolbar-right {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .btn-invoice {
+            background: #f0f2ff;
+            color: #5865f2;
+            border: 1px solid #d0d5ff;
+            padding: 8px 16px;
+            border-radius: 8px;
+            font-size: 13px;
+            cursor: pointer;
+        }
+
+        .icon-btn {
+            width: 34px;
+            height: 34px;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            background: #fff;
+            font-size: 16px;
+        }
+
+        /* Table */
+        .order-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .order-table thead th {
+            text-align: left;
+            padding: 12px 16px;
+            font-size: 13px;
+            color: #888;
+            font-weight: 500;
+            border-bottom: 1px solid #eee;
+        }
+
+        .order-table tbody tr {
+            border-bottom: 1px solid #f5f5f5;
+            transition: background 0.2s;
+        }
+
+        .order-table tbody tr:hover {
+            background: #fafbff;
+        }
+
+        .order-table td {
+            padding: 16px;
+            font-size: 14px;
+        }
+
+        .checkbox-cell {
+            width: 40px;
+        }
+
+        .checkbox-cell input {
+            width: 16px;
+            height: 16px;
+            accent-color: #5865f2;
+        }
+
+        .order-id {
+            font-family: 'Monaco', 'Menlo', monospace;
+            font-size: 13px;
+            color: #333;
+        }
+
+        .copy-icon {
+            color: #bbb;
+            margin-left: 6px;
+            cursor: pointer;
+            font-size: 12px;
+        }
+
+        .status-tag {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            padding: 4px 10px;
+            border-radius: 4px;
+            font-size: 12px;
+            background: #f0fdf4;
+            color: #22c55e;
+        }
+
+        .price {
+            color: #ff4d4f;
+            font-weight: 600;
+            font-size: 15px;
+        }
+
+        /* Footer */
+        .table-footer {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-top: 20px;
+            padding-top: 16px;
+            border-top: 1px solid #eee;
+        }
+
+        .footer-left {
+            font-size: 14px;
+            color: #666;
+        }
+
+        .footer-left strong {
+            color: #5865f2;
+            font-size: 16px;
+        }
+
+        .footer-right {
+            display: flex;
+            gap: 10px;
+        }
+
+        .btn-apply {
+            background: #5865f2;
+            color: #fff;
+            border: none;
+            padding: 10px 24px;
+            border-radius: 8px;
+            font-size: 14px;
+            cursor: pointer;
+        }
+
+        .btn-cancel {
+            background: #fff;
+            color: #666;
+            border: 1px solid #ddd;
+            padding: 10px 24px;
+            border-radius: 8px;
+            font-size: 14px;
+            cursor: pointer;
+        }
+
+        /* Modal Overlay */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.45);
+            z-index: 999;
+            justify-content: center;
+            align-items: flex-start;
+            overflow-y: auto;
+            padding: 60px 20px;
+        }
+
+        .modal-overlay.show {
+            display: flex;
+        }
+
+        .modal-container {
+            background: #fff;
+            border-radius: 16px;
+            width: 520px;
+            max-width: 90vw;
+            position: relative;
+            animation: modalSlideIn 0.25s ease-out;
+        }
+
+        @keyframes modalSlideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .modal-header {
+            padding: 24px 28px 0;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .modal-back-btn {
+            width: 32px;
+            height: 32px;
+            border: none;
+            background: transparent;
+            font-size: 20px;
+            cursor: pointer;
+            color: #666;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            transition: all 0.2s;
+        }
+
+        .modal-back-btn:hover {
+            background: #f5f5f5;
+        }
+
+        .modal-title {
+            font-size: 20px;
+            font-weight: 600;
+            color: #1a1a2e;
+        }
+
+        .modal-close-btn {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            width: 32px;
+            height: 32px;
+            border: none;
+            background: transparent;
+            font-size: 20px;
+            cursor: pointer;
+            color: #999;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            transition: all 0.2s;
+        }
+
+        .modal-close-btn:hover {
+            background: #f5f5f5;
+            color: #333;
+        }
+
+        .modal-body {
+            padding: 24px 28px 28px;
+        }
+
+        /* Certification Type Selection */
+        .cert-type-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+            margin-top: 24px;
+        }
+
+        .cert-type-card {
+            border: 2px solid #e8e8e8;
+            border-radius: 12px;
+            padding: 24px 20px;
+            cursor: pointer;
+            transition: all 0.25s;
+        }
+
+        .cert-type-card:hover {
+            border-color: #5865f2;
+            box-shadow: 0 4px 16px rgba(88, 101, 242, 0.12);
+        }
+
+        .cert-type-card h3 {
+            font-size: 17px;
+            font-weight: 600;
+            color: #1a1a2e;
+            margin-bottom: 8px;
+        }
+
+        .cert-type-card p {
+            font-size: 13px;
+            color: #888;
+            line-height: 1.6;
+            margin-bottom: 16px;
+        }
+
+        .cert-type-link {
+            color: #5865f2;
+            font-size: 14px;
+            font-weight: 500;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        /* Warning Box */
+        .warning-box {
+            background: #fffbe6;
+            border: 1px solid #ffe58f;
+            border-radius: 8px;
+            padding: 14px 18px;
+            font-size: 14px;
+            color: #856404;
+            line-height: 1.6;
+            margin-bottom: 20px;
+        }
+
+        /* Form Styles */
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-label {
+            display: block;
+            font-size: 14px;
+            font-weight: 500;
+            color: #333;
+            margin-bottom: 8px;
+        }
+
+        .form-label .required {
+            color: #ff4d4f;
+            margin-right: 4px;
+        }
+
+        .form-input,
+        .form-select {
+            width: 100%;
+            padding: 11px 14px;
+            border: 1px solid #d9d9d9;
+            border-radius: 8px;
+            font-size: 14px;
+            outline: none;
+            transition: all 0.2s;
+            appearance: none;
+            background: #fff;
+        }
+
+        .form-input:focus,
+        .form-select:focus {
+            border-color: #5865f2;
+            box-shadow: 0 0 0 3px rgba(88, 101, 242, 0.08);
+        }
+
+        .select-wrapper {
+            position: relative;
+        }
+
+        .select-wrapper::after {
+            content: "▾";
+            position: absolute;
+            right: 14px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #999;
+            pointer-events: none;
+            font-size: 14px;
+        }
+
+        /* Checkbox Agreement */
+        .agreement-check {
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            margin: 24px 0;
+            font-size: 13px;
+            color: #666;
+            line-height: 1.7;
+        }
+
+        .agreement-check input[type="checkbox"] {
+            width: 16px;
+            height: 16px;
+            margin-top: 3px;
+            accent-color: #5865f2;
+        }
+
+        .btn-submit {
+            width: 100%;
+            background: linear-gradient(135deg, #5865f2, #7c83ff);
+            color: #fff;
+            border: none;
+            padding: 13px;
+            border-radius: 8px;
+            font-size: 15px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .btn-submit:hover:not(:disabled) {
+            box-shadow: 0 4px 14px rgba(88, 101, 242, 0.35);
+        }
+
+        .btn-submit:disabled {
+            background: #d0d0d0;
+            cursor: not-allowed;
+        }
+
+        /* Step Indicator */
+        .step-indicator {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 28px;
+            padding: 0 8px;
+        }
+
+        .step-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 14px;
+            color: #bbb;
+        }
+
+        .step-num {
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 13px;
+            font-weight: 600;
+            background: #e8e8e8;
+            color: #999;
+        }
+
+        .step-item.active .step-num {
+            background: #5865f2;
+            color: #fff;
+        }
+
+        .step-item.completed .step-num {
+            background: #52c41a;
+            color: #fff;
+        }
+
+        .step-item.active {
+            color: #5865f2;
+            font-weight: 500;
+        }
+
+        .step-line {
+            flex: 1;
+            height: 1px;
+            background: #e8e8e8;
+            margin: 0 12px;
+        }
+
+        /* File Upload Area */
+        .upload-area {
+            border: 2px dashed #d9d9d9;
+            border-radius: 10px;
+            padding: 40px 20px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.2s;
+            background: #fafafa;
+            margin-bottom: 20px;
+        }
+
+        .upload-area:hover {
+            border-color: #5865f2;
+            background: #f0f2ff;
+        }
+
+        .upload-icon {
+            font-size: 42px;
+            color: #ccc;
+            margin-bottom: 10px;
+        }
+
+        .upload-area p {
+            font-size: 13px;
+            color: #888;
+        }
+
+        .upload-preview {
+            display: inline-block;
+            margin-top: 10px;
+        }
+
+        .upload-preview img {
+            max-width: 200px;
+            max-height: 140px;
+            border-radius: 8px;
+            object-fit: cover;
+        }
+
+        .upload-hint {
+            font-size: 12px;
+            color: #aaa;
+            margin-top: 8px;
+        }
+
+        /* Enterprise Method Cards */
+        .method-card {
+            border: 1px solid #e8e8e8;
+            border-radius: 12px;
+            padding: 20px 24px;
+            margin-bottom: 16px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .method-card:hover {
+            border-color: #5865f2;
+            box-shadow: 0 2px 12px rgba(88, 101, 242, 0.1);
+        }
+
+        .method-card h4 {
+            font-size: 15px;
+            font-weight: 600;
+            color: #1a1a2e;
+            margin-bottom: 12px;
+        }
+
+        .method-card ol {
+            padding-left: 18px;
+            font-size: 14px;
+            color: #555;
+            line-height: 1.9;
+        }
+
+        .method-arrow {
+            float: right;
+            color: #ccc;
+            font-size: 18px;
+            margin-top: -26px;
+        }
+
+        /* QR Code Section */
+        .qr-code-section {
+            text-align: center;
+            padding: 30px 0;
+        }
+
+        .qr-placeholder {
+            width: 180px;
+            height: 180px;
+            background: #f5f5f5;
+            border-radius: 12px;
+            margin: 0 auto 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 64px;
+            border: 2px dashed #ddd;
+        }
+
+        .qr-hint {
+            font-size: 14px;
+            color: #666;
+        }
+
+        /* Success Section */
+        .success-section {
+            text-align: center;
+            padding: 40px 20px;
+        }
+
+        .success-section h3 {
+            font-size: 20px;
+            font-weight: 600;
+            color: #1a1a2e;
+            margin-bottom: 8px;
+        }
+
+        .success-section p {
+            font-size: 14px;
+            color: #888;
+        }
+
+        /* Amount Verify */
+        .amount-verify-box {
+            background: #f8f9fc;
+            border-radius: 10px;
+            padding: 20px;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .amount-verify-box p {
+            font-size: 14px;
+            color: #666;
+            margin-bottom: 14px;
+        }
+
+        .amount-verify-box input {
+            width: 180px;
+            padding: 10px 14px;
+            border: 1px solid #d9d9d9;
+            border-radius: 8px;
+            font-size: 16px;
+            text-align: center;
+            outline: none;
+        }
+
+        .amount-verify-box input:focus {
+            border-color: #5865f2;
+        }
+
+        /* Error / Warning States */
+        .form-input-error {
+            border-color: #ff4d4f !important;
+        }
+
+        .error-msg {
+            color: #ff4d4f;
+            font-size: 12px;
+            margin-top: 4px;
+            display: none;
+        }
+
+        .error-msg.show {
+            display: block;
+        }
+
+        /* Cert Result Styles */
+        .cert-result-fail {
+            text-align: center;
+            padding: 40px 20px;
+        }
+
+        .cert-result-fail h3 {
+            font-size: 20px;
+            font-weight: 600;
+            color: #1a1a2e;
+            margin-bottom: 8px;
+        }
+
+        .cert-result-fail p {
+            font-size: 14px;
+            color: #888;
+            line-height: 1.7;
+            margin-bottom: 6px;
+        }
+
+        /* Pending State */
+        .cert-result-pending {
+            text-align: center;
+            padding: 40px 20px;
+        }
+
+        .cert-result-pending h3 {
+            font-size: 20px;
+            font-weight: 600;
+            color: #1a1a2e;
+            margin-bottom: 10px;
+        }
+
+        .cert-result-pending p {
+            font-size: 14px;
+            color: #666;
+            line-height: 1.8;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <div class="header-left">
+                <h1>会员中心</h1>
+                <p>管理您的会员信息和权益</p>
+            </div>
+            <button class="btn-primary">⊙ 会员体系介绍</button>
+        </div>
+
+        <!-- Main Content -->
+        <div class="main-content">
+            <!-- Left Sidebar -->
+            <aside class="sidebar">
+                <!-- Member Info -->
+                <div class="card">
+                    <div class="card-title">
+                        👤 会员信息
+                    </div>
+                    <div class="user-info-item">
+                        <span class="user-label">👤 注册用户</span>
+                        <div class="user-value" style="display:flex;align-items:center;">
+                            <div style="text-align:right;">
+                                <div class="user-date">开始时间</div>
+                                <div class="user-name">2026-01-14</div>
+                            </div>
+                            <button id="certBtn" class="cert-btn cert-btn-active" onclick="openCertModal()">去实名认证</button>
+                        </div>
+                    </div>
+                    <div class="user-info-item">
+                        <span class="user-label">⚡ 权益概览</span>
+                    </div>
+                    <div class="user-info-item">
+                        <span class="user-label">🔌 功能使用权益</span>
+                    </div>
+                </div>
+
+                <!-- Permissions -->
+                <div class="card" style="padding: 20px;">
+                    <div class="perm-item">
+                        <div class="perm-icon chat">💬</div>
+                        <div class="perm-text">
+                            <h4>答题助手</h4>
+                            <span>免费使用</span>
+                        </div>
+                    </div>
+                    <div class="perm-item">
+                        <div class="perm-icon guide">📋</div>
+                        <div class="perm-text">
+                            <h4>指南解答</h4>
+                            <span>免费使用</span>
+                        </div>
+                    </div>
+                    
+                    <div class="perm-section-title">📄 权益券</div>
+                    <div class="perm-item">
+                        <div class="perm-icon report">📄</div>
+                        <div class="perm-text">
+                            <h4>体检报告解读券</h4>
+                            <span>每月1张</span>
+                        </div>
+                    </div>
+                </div>
+
+                <button class="btn-upgrade">☰ 升级会员</button>
+            </aside>
+
+            <!-- Right Panel -->
+            <section class="right-panel">
+                <div class="tabs">
+                    <div class="tab-item">资格认证</div>
+                    <div class="tab-item">权益券</div>
+                    <div class="tab-item">兑换码</div>
+                    <div class="tab-item">优惠券</div>
+                    <div class="tab-item">会员升级</div>
+                    <div class="tab-item">任务中心</div>
+                    <div class="tab-item active">购买记录</div>
+                </div>
+
+                <div class="tab-content">
+                    <div class="toolbar">
+                        <select class="dropdown">
+                            <option>全部</option>
+                        </select>
+                        <div class="search-box">
+                            <input type="text" placeholder="搜索订单号/商品名...">
+                        </div>
+                        <div class="toolbar-right">
+                            <button class="btn-invoice" id="invoiceBadgeBtn">📄 开票(<strong id="selectedCountBadge">0</strong>)</button>
+                            <button class="icon-btn" onclick="refreshOrders()">↻</button>
+                            <button class="icon-btn" id="exportBtn">↓</button>
+                        </div>
+                    </div>
+
+                    <table class="order-table">
+                        <thead>
+                            <tr>
+                                <th class="checkbox-cell"><input type="checkbox" id="selectAllCheckbox"></th>
+                                <th>订单号</th>
+                                <th>商品名称</th>
+                                <th>订单状态</th>
+                                <th>实付金额</th>
+                                <th>创建时间</th>
+                            </tr>
+                        </thead>
+                        <tbody id="orderTableBody">
+                            <tr data-price="5.0">
+                                <td class="checkbox-cell"><input type="checkbox" class="row-checkbox" checked></td>
+                                <td><span class="order-id">ORD20260414221147TJVIXG<span class="copy-icon">📋</span></span></td>
+                                <td>3天高级会员特惠卡</td>
+                                <td><span class="status-tag">● 已完成</span></td>
+                                <td><span class="price">¥5.0</span></td>
+                                <td>2026/04/14 22:11</td>
+                            </tr>
+                            <tr data-price="9.9">
+                                <td class="checkbox-cell"><input type="checkbox" class="row-checkbox" checked></td>
+                                <td><span class="order-id">ORD202604082203570CXQBS<span class="copy-icon">📋</span></span></td>
+                                <td>高级会员（月付）</td>
+                                <td><span class="status-tag">● 已完成</span></td>
+                                <td><span class="price">¥9.9</span></td>
+                                <td>2026/04/08 22:03</td>
+                            </tr>
+                            <tr data-price="5.0">
+                                <td class="checkbox-cell"><input type="checkbox" class="row-checkbox" checked></td>
+                                <td><span class="order-id">ORD20260408073843VW38DI<span class="copy-icon">📋</span></span></td>
+                                <td>3天高级会员特惠卡</td>
+                                <td><span class="status-tag">● 已完成</span></td>
+                                <td><span class="price">¥5.0</span></td>
+                                <td>2026/04/08 07:38</td>
+                            </tr>
+                            <tr data-price="9.9">
+                                <td class="checkbox-cell"><input type="checkbox" class="row-checkbox" checked></td>
+                                <td><span class="order-id">ORD20260408073502H3CFQ5<span class="copy-icon">📋</span></span></td>
+                                <td>高级会员（月付）</td>
+                                <td><span class="status-tag">● 已完成</span></td>
+                                <td><span class="price">¥9.9</span></td>
+                                <td>2026/04/08 07:35</td>
+                            </tr>
+                            <tr data-price="12.5">
+                                <td class="checkbox-cell"><input type="checkbox" class="row-checkbox" checked></td>
+                                <td><span class="order-id">ORD20260407182391KJQWXP<span class="copy-icon">📋</span></span></td>
+                                <td>7天高级会员特惠卡</td>
+                                <td><span class="status-tag">● 已完成</span></td>
+                                <td><span class="price">¥12.5</span></td>
+                                <td>2026/04/07 18:23</td>
+                            </tr>
+                            <tr data-price="99.0">
+                                <td class="checkbox-cell"><input type="checkbox" class="row-checkbox" checked></td>
+                                <td><span class="order-id">ORD20260406144522PLMNOZ<span class="copy-icon">📋</span></span></td>
+                                <td>高级会员（年付）</td>
+                                <td><span class="status-tag">● 已完成</span></td>
+                                <td><span class="price">¥99.0</span></td>
+                                <td>2026/04/06 14:45</td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <div class="table-footer">
+                        <div class="footer-left">已选择 <strong id="selectedCountFooter">0</strong> 个订单，合计金额：<strong id="totalAmountFooter">¥0.00</strong></div>
+                        <div class="footer-right">
+                            <button class="btn-apply" id="applyInvoiceBtn">申请开票</button>
+                            <button class="btn-cancel" id="cancelSelectBtn">取消选择</button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </div>
+
+    <!-- Modal: 认证类型选择 -->
+    <div class="modal-overlay" id="modalTypeSelect">
+        <div class="modal-container">
+            <div class="modal-header">
+                <button class="modal-close-btn" onclick="closeAllModals()">✕</button>
+            </div>
+            <div class="modal-body">
+                <h2 class="modal-title" style="margin-bottom:4px;">实名认证</h2>
+                <p style="color:#888;font-size:14px;margin-bottom:8px;">选择认证类型以继续</p>
+                
+                <div class="cert-type-grid">
+                    <div class="cert-type-card" onclick="goPersonalCert()">
+                        <h3>个人认证</h3>
+                        <p>适用于个人用户，账号归属个人</p>
+                        <span class="cert-type-link">立即认证 →</span>
+                    </div>
+                    <div class="cert-type-card" onclick="goEnterpriseCert()">
+                        <h3>企业认证</h3>
+                        <p>适用于企业、个体工商户、事业单位、学校等，账号归属于企业。</p>
+                        <span class="cert-type-link">立即认证 →</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal: 个人认证 - 信息填写 -->
+    <div class="modal-overlay" id="modalPersonalForm">
+        <div class="modal-container">
+            <div class="modal-header">
+                <button class="modal-back-btn" onclick="goBackTo('modalTypeSelect')">‹</button>
+                <h2 class="modal-title">个人认证</h2>
+                <button class="modal-close-btn" onclick="closeAllModals()">✕</button>
+            </div>
+            <div class="modal-body">
+                <div class="warning-box">
+                    根据相关法律法规，我们不对未满14周岁的个人提供在线实名认证服务。
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label"><span class="required">*</span> 真实姓名</label>
+                    <input type="text" class="form-input" placeholder="请输入真实姓名" id="personalName" oninput="validatePersonalForm()">
+                    <div class="error-msg" id="personalNameError">请输入真实姓名</div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label"><span class="required">*</span> 证件类型</label>
+                    <div class="select-wrapper">
+                        <select class="form-select" id="personalIdType" onchange="validatePersonalForm()">
+                            <option value="">中国大陆二代居民身份证</option>
+                            <option value="passport">护照</option>
+                            <option value="hk_macao">港澳居民来往内地通行证</option>
+                            <option value="taiwan">台湾居民来往大陆通行证</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label"><span class="required">*</span> 证件号码</label>
+                    <input type="text" class="form-input" placeholder="请输入身份证号码" id="personalIdNumber" oninput="validatePersonalForm()">
+                    <div class="error-msg" id="personalIdNumberError">请输入证件号码</div>
+                </div>
+
+                <div class="agreement-check">
+                    <input type="checkbox" id="personalAgree">
+                    <label for="personalAgree">您理解并同意医启诊有权自行或委托第三方，审查您在实名认证时提供的信息是否真实、准确及有效。若提供虚假信息，由此带来的后果全部由您承担。</label>
+                </div>
+
+                <button class="btn-submit" id="personalSubmitBtn" disabled onclick="submitPersonalForm()">提交认证</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal: 个人认证 - 扫码 -->
+    <div class="modal-overlay" id="modalPersonalQR">
+        <div class="modal-container">
+            <div class="modal-header">
+                <button class="modal-back-btn" onclick="goBackTo('modalPersonalForm')">‹</button>
+                <h2 class="modal-title">个人认证</h2>
+                <button class="modal-close-btn" onclick="closeAllModals()">✕</button>
+            </div>
+            <div class="modal-body">
+                <div class="qr-code-section">
+                    <div class="qr-placeholder"><svg width="80" height="80" viewBox="0 0 24 24" fill="none" stroke="#bbb" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="3" height="3" rx="0.5"/><rect x="18" y="14" width="3" height="3" rx="0.5"/><rect x="14" y="18" width="3" height="3" rx="0.5"/><rect x="18" y="18" width="3" height="3" rx="0.5"/></svg></div>
+                    <p class="qr-hint">请使用支付宝扫描上方二维码进行实名认证</p>
+                </div>
+                <div style="display:flex;gap:10px;margin-top:16px;">
+                    <button class="btn-submit" onclick="checkPersonalCertResult()" style="flex:1;">我已完成认证</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal: 个人认证 - 完成 -->
+    <div class="modal-overlay" id="modalPersonalSuccess">
+        <div class="modal-container">
+            <div class="modal-header">
+                <h2 class="modal-title">个人认证</h2>
+                <button class="modal-close-btn" onclick="closeAllModals();">✕</button>
+            </div>
+            <div class="modal-body">
+                <!-- 成功状态（默认隐藏） -->
+                <div id="personalResultSuccess" style="display:none;">
+                    <div class="success-section">
+                        <h3>实名认证成功！</h3>
+                        <p>您的个人信息已通过实名认证</p>
+                        <button class="btn-submit" style="margin-top:24px;width:auto;padding:10px 48px;" onclick="closeAllModals();markCertified();">确定</button>
+                    </div>
+                </div>
+                <!-- 失败状态（默认显示） -->
+                <div id="personalResultFail">
+                    <div class="cert-result-fail">
+                        <h3>您未认证成功</h3>
+                        <p>请重试或联系客服处理。</p>
+                        <p style="color:#aaa;font-size:13px;margin-top:12px;">可能原因：信息填写错误、证件照片不清晰等</p>
+                        <button class="btn-submit" style="margin-top:24px;width:auto;padding:10px 32px;background:#5865f2;" onclick="goBackTo('modalPersonalForm');document.getElementById('personalResultFail').style.display='none';document.getElementById('personalResultSuccess').style.display='none';">重新认证</button>
+                        <button onclick="closeAllModals();" style="margin-top:10px;width:auto;padding:8px 24px;border:none;background:none;color:#999;font-size:14px;cursor:pointer;">稍后再说</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal: 企业认证 - 方式选择 -->
+    <div class="modal-overlay" id="modalEnterpriseMethod">
+        <div class="modal-container">
+            <div class="modal-header">
+                <button class="modal-back-btn" onclick="goBackTo('modalTypeSelect')">‹</button>
+                <h2 class="modal-title">企业认证</h2>
+                <button class="modal-close-btn" onclick="closeAllModals()">✕</button>
+            </div>
+            <div class="modal-body">
+                <div class="warning-box">
+                    ● 企业事业单位等可以进行企业认证，认证后账号属于企业，可开具增值税专用发票。<br>
+                    ● 同一登记主体（营业执照或统一社会信用代码等）仅支持 1 个平台账号完成企业认证。<br>
+                    ● 工商登记数据同步可能存在延时，若企业注册 7 个工作日后仍无法自助完成认证，请联系客服。
+                </div>
+
+                <h3 style="font-size:17px;font-weight:600;margin-bottom:16px;">认证方式</h3>
+
+                <div class="method-card" onclick="goEntLegalPerson()">
+                    <h4>法定代表人人脸识别认证（最快20分钟）<span class="method-arrow">›</span></h4>
+                    <ol>
+                        <li>填写企业或组织名称与统一社会信用代码，法定代表人姓名与身份证号码。</li>
+                        <li>法定代表人本人使用支付宝 App 进行人脸识别。</li>
+                        <li>完成认证。</li>
+                    </ol>
+                </div>
+
+                <div class="method-card" onclick="goEntTransfer()">
+                    <h4>企业对公打款<span class="method-arrow">›</span></h4>
+                    <ol>
+                        <li>填写企业或组织名称及统一社会信用代码、法定代表人姓名。</li>
+                        <li>填写企业对公账户信息，发起打款。</li>
+                        <li>收到账户名为"缘启智慧（北京）科技有限公司"的打款后，回填验证金额。</li>
+                        <li>完成认证。</li>
+                    </ol>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal: 法人人脸识别 - 信息填写 -->
+    <div class="modal-overlay" id="modalLegalPersonForm">
+        <div class="modal-container" style="width:580px;max-width:92vw;">
+            <div class="modal-header">
+                <button class="modal-back-btn" onclick="goBackTo('modalEnterpriseMethod')">‹</button>
+                <h2 class="modal-title">法定代表人人脸识别认证</h2>
+                <button class="modal-close-btn" onclick="closeAllModals()">✕</button>
+            </div>
+            <div class="modal-body">
+                <div class="warning-box">
+                    1. 填写企业或组织名称与统一社会信用代码，法定代表人姓名与身份证号码。<br>
+                    2. 法定代表人本人使用支付宝 App 进行人脸识别。<br>
+                    3. 完成认证。
+                </div>
+
+                <!-- Steps -->
+                <div class="step-indicator">
+                    <div class="step-item active">
+                        <span class="step-num">1</span>
+                        <span>填写认证信息</span>
+                    </div>
+                    <div class="step-line"></div>
+                    <div class="step-item">
+                        <span class="step-num">2</span>
+                        <span>人脸识别</span>
+                    </div>
+                    <div class="step-line"></div>
+                    <div class="step-item">
+                        <span class="step-num">3</span>
+                        <span>完成认证</span>
+                    </div>
+                </div>
+
+                <h3 style="font-size:15px;font-weight:600;margin-bottom:14px;">企业认证四要素信息</h3>
+
+                <div class="form-group">
+                    <label class="form-label">营业执照快速识别</label>
+                    <p style="font-size:12px;color:#aaa;margin-bottom:8px;">OCR识别快速填写企业信息：请提供证件的原件照片或彩色扫描件（正副本均可），文字/盖章清晰可辨认以确保可以识别企业信息。格式要求jpg、jpeg、png，不超过3MB。</p>
+                    <div style="display:flex;gap:16px;align-items:flex-start;">
+                        <div class="upload-area" style="flex:0 0 160px;padding:30px 10px;">
+                            <div class="upload-icon">+</div>
+                            <p style="font-size:12px;">点击添加文件或<br>拖拽文件到此处</p>
+                        </div>
+                        <div class="upload-preview">
+                            <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='150' viewBox='0 0 220 150'%3E%3Crect fill='%23fff8ee' stroke='%23d4af37' stroke-width='2' width='218' height='148' rx='4'/%3E%3Ctext x='110' y='65' text-anchor='middle' fill='%23c00' font-size='12' font-weight='bold'%3E营业执照%3C/text%3E%3Crect x='20' y='85' fill='%23ddd' width='70' height='12' rx='2'/%3E%3Crect x='20' y='105' fill='%23ddd' width='120' height='10' rx='2'/%3E%3Ccircle cx='175' cy='115' r='16' fill='%23e74c3c'/%3E%3C/svg%3E" alt="营业执照示例">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label"><span class="required">*</span> 企业名称</label>
+                    <input type="text" class="form-input" placeholder="请输入企业或者组织机构名称" id="entNameLP" oninput="validateLegalPersonForm()">
+                    <div class="error-msg" id="entNameLPError">请输入企业或组织机构名称</div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label"><span class="required">*</span> 统一社会信用代码</label>
+                    <input type="text" class="form-input" placeholder="请输入企业或者组织机构的统一社会信用代码" id="entCreditCodeLP" oninput="validateLegalPersonForm()">
+                    <div class="error-msg" id="entCreditCodeLPError">请输入统一社会信用代码</div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label"><span class="required">*</span> 法人姓名</label>
+                    <input type="text" class="form-input" placeholder="请输入法人姓名" id="entLegalNameLP" oninput="validateLegalPersonForm()">
+                    <div class="error-msg" id="entLegalNameLPError">请输入法人姓名</div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label"><span class="required">*</span> 法人身份证号</label>
+                    <input type="text" class="form-input" placeholder="请输入法人身份证号" id="entLegalIdLP" oninput="validateLegalPersonForm()">
+                    <div class="error-msg" id="entLegalIdLPError">请输入法人身份证号</div>
+                </div>
+
+                <button class="btn-submit" id="legalPersonSubmitBtn" onclick="submitLegalPersonForm()" disabled>下一步：人脸识别</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal: 法人人脸识别 - 人脸识别 -->
+    <div class="modal-overlay" id="modalLegalFace">
+        <div class="modal-container">
+            <div class="modal-header">
+                <button class="modal-back-btn" onclick="goBackTo('modalLegalPersonForm')">‹</button>
+                <h2 class="modal-title">法定代表人人脸识别认证</h2>
+                <button class="modal-close-btn" onclick="closeAllModals()">✕</button>
+            </div>
+            <div class="modal-body">
+                <div class="step-indicator">
+                    <div class="step-item completed">
+                        <span class="step-num">✓</span>
+                        <span>填写认证信息</span>
+                    </div>
+                    <div class="step-line"></div>
+                    <div class="step-item active">
+                        <span class="step-num">2</span>
+                        <span>人脸识别</span>
+                    </div>
+                    <div class="step-line"></div>
+                    <div class="step-item">
+                        <span class="step-num">3</span>
+                        <span>完成认证</span>
+                    </div>
+                </div>
+
+                <div class="qr-code-section">
+                    <div class="qr-placeholder"><svg width="80" height="80" viewBox="0 0 24 24" fill="none" stroke="#bbb" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 3H5a2 2 0 00-2 2v4m6-6h10a2 2 0 012 2v4M9 3v18m0 0h10a2 2 0 002-2v-4M9 21H5a2 2 0 01-2-2v-4"/><circle cx="12" cy="10" r="3"/><path d="M7 21v-1a5 5 0 0110 0v1"/></svg></div>
+                    <p class="qr-hint">请法定代表人使用支付宝 App 扫描二维码进行人脸识别</p>
+                    <p style="font-size:12px;color:#aaa;margin-top:8px;">请在 <strong>20分钟内</strong> 完成人脸识别操作</p>
+                </div>
+
+                <div style="display:flex;gap:10px;margin-top:16px;">
+                    <button class="btn-submit" onclick="checkLegalCertResult()" style="flex:1;">我已完成人脸识别</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal: 法人人脸识别 - 完成 -->
+    <div class="modal-overlay" id="modalLegalSuccess">
+        <div class="modal-container">
+            <div class="modal-header">
+                <h2 class="modal-title">法定代表人人脸识别认证</h2>
+                <button class="modal-close-btn" onclick="closeAllModals();">✕</button>
+            </div>
+            <div class="modal-body">
+                <!-- 成功状态（默认隐藏） -->
+                <div id="legalResultSuccess" style="display:none;">
+                    <div class="step-indicator">
+                        <div class="step-item completed">
+                            <span class="step-num">✓</span>
+                            <span>填写认证信息</span>
+                        </div>
+                        <div class="step-line"></div>
+                        <div class="step-item completed">
+                            <span class="step-num">✓</span>
+                            <span>人脸识别</span>
+                        </div>
+                        <div class="step-line"></div>
+                        <div class="step-item active">
+                            <span class="step-num">3</span>
+                            <span>完成认证</span>
+                        </div>
+                    </div>
+
+                    <div class="success-section">
+                        <h3>企业认证成功！</h3>
+                        <p>您的企业已通过实名认证</p>
+                        <button class="btn-submit" style="margin-top:24px;width:auto;padding:10px 48px;" onclick="closeAllModals();markCertified();">确定</button>
+                    </div>
+                </div>
+                <!-- 失败状态（默认显示） -->
+                <div id="legalResultFail">
+                    <div class="step-indicator">
+                        <div class="step-item completed">
+                            <span class="step-num">✓</span>
+                            <span>填写认证信息</span>
+                        </div>
+                        <div class="step-line"></div>
+                        <div class="step-item active" style="color:#ff4d4f;">
+                            <span class="step-num" style="background:#ff4d4f;">2</span>
+                            <span>人脸识别</span>
+                        </div>
+                        <div class="step-line"></div>
+                        <div class="step-item">
+                            <span class="step-num">3</span>
+                            <span>完成认证</span>
+                        </div>
+                    </div>
+
+                    <div class="cert-result-fail">
+                        <h3>您未认证成功</h3>
+                        <p>法定代表人人脸识别未通过。</p>
+                        <p style="color:#aaa;font-size:13px;margin-top:12px;">请重试或联系客服处理。可能原因：人脸不匹配、操作超时等</p>
+                        <button class="btn-submit" style="margin-top:24px;width:auto;padding:10px 32px;background:#5865f2;" onclick="goBackTo('modalLegalFace');document.getElementById('legalResultFail').style.display='none';document.getElementById('legalResultSuccess').style.display='none';">重新进行人脸识别</button>
+                        <button onclick="closeAllModals();" style="margin-top:10px;width:auto;padding:8px 24px;border:none;background:none;color:#999;font-size:14px;cursor:pointer;">稍后再说</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal: 对公打款 - 信息填写 -->
+    <div class="modal-overlay" id="modalTransferForm">
+        <div class="modal-container" style="width:580px;max-width:92vw;">
+            <div class="modal-header">
+                <button class="modal-back-btn" onclick="goBackTo('modalEnterpriseMethod')">‹</button>
+                <h2 class="modal-title">企业对公打款认证</h2>
+                <button class="modal-close-btn" onclick="closeAllModals()">✕</button>
+            </div>
+            <div class="modal-body">
+                <div class="warning-box">
+                    1. 填写企业或组织名称及统一社会信用代码、法定代表人姓名。<br>
+                    2. 填写企业对公账户信息，发起打款。<br>
+                    3. 收到账户名为"缘启智慧（北京）科技有限公司"的打款后，回填验证金额。<br>
+                    4. 完成认证。
+                </div>
+
+                <!-- Steps -->
+                <div class="step-indicator">
+                    <div class="step-item active">
+                        <span class="step-num">1</span>
+                        <span>填写认证信息</span>
+                    </div>
+                    <div class="step-line"></div>
+                    <div class="step-item">
+                        <span class="step-num">2</span>
+                        <span>对公打款</span>
+                    </div>
+                    <div class="step-line"></div>
+                    <div class="step-item">
+                        <span class="step-num">3</span>
+                        <span>验证打款金额</span>
+                    </div>
+                    <div class="step-line"></div>
+                    <div class="step-item">
+                        <span class="step-num">4</span>
+                        <span>完成认证</span>
+                    </div>
+                </div>
+
+                <h3 style="font-size:15px;font-weight:600;margin-bottom:14px;">企业基本信息</h3>
+
+                <div class="form-group">
+                    <label class="form-label">营业执照快速识别</label>
+                    <p style="font-size:12px;color:#aaa;margin-bottom:8px;">OCR识别快速填写企业信息：请提供证件的原件照片或彩色扫描件（正副本均可），文字/盖章清晰可辨认以确保可以识别企业信息。格式要求jpg、jpeg、png，不超过3MB。</p>
+                    <div style="display:flex;gap:16px;align-items:flex-start;">
+                        <div class="upload-area" style="flex:0 0 160px;padding:30px 10px;">
+                            <div class="upload-icon">+</div>
+                            <p style="font-size:12px;">点击添加文件或<br>拖拽文件到此处</p>
+                        </div>
+                        <div class="upload-preview">
+                            <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='150' viewBox='0 0 220 150'%3E%3Crect fill='%23fff8ee' stroke='%23d4af37' stroke-width='2' width='218' height='148' rx='4'/%3E%3Ctext x='110' y='65' text-anchor='middle' fill='%23c00' font-size='12' font-weight='bold'%3E营业执照%3C/text%3E%3Crect x='20' y='85' fill='%23ddd' width='70' height='12' rx='2'/%3E%3Crect x='20' y='105' fill='%23ddd' width='120' height='10' rx='2'/%3E%3Ccircle cx='175' cy='115' r='16' fill='%23e74c3c'/%3E%3C/svg%3E" alt="营业执照示例">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label"><span class="required">*</span> 企业名称</label>
+                    <input type="text" class="form-input" placeholder="请输入企业或者组织机构名称" id="entNameTR" oninput="validateTransferForm()">
+                    <div class="error-msg" id="entNameTRError">请输入企业或组织机构名称</div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label"><span class="required">*</span> 统一社会信用代码</label>
+                    <input type="text" class="form-input" placeholder="请输入企业或者组织机构的统一社会信用代码" id="entCreditCodeTR" oninput="validateTransferForm()">
+                    <div class="error-msg" id="entCreditCodeTRError">请输入统一社会信用代码</div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label"><span class="required">*</span> 法人姓名</label>
+                    <input type="text" class="form-input" placeholder="请输入法人姓名" id="entLegalNameTR" oninput="validateTransferForm()">
+                    <div class="error-msg" id="entLegalNameTRError">请输入法人姓名</div>
+                </div>
+
+                <button class="btn-submit" id="transferSubmitBtn" onclick="submitTransferForm()" disabled>下一步：对公打款</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal: 对公打款 - 打款确认 -->
+    <div class="modal-overlay" id="modalTransferPay">
+        <div class="modal-container">
+            <div class="modal-header">
+                <button class="modal-back-btn" onclick="goBackTo('modalTransferForm')">‹</button>
+                <h2 class="modal-title">企业对公打款认证</h2>
+                <button class="modal-close-btn" onclick="closeAllModals()">✕</button>
+            </div>
+            <div class="modal-body">
+                <div class="step-indicator">
+                    <div class="step-item completed">
+                        <span class="step-num">✓</span>
+                        <span>填写认证信息</span>
+                    </div>
+                    <div class="step-line"></div>
+                    <div class="step-item active">
+                        <span class="step-num">2</span>
+                        <span>对公打款</span>
+                    </div>
+                    <div class="step-line"></div>
+                    <div class="step-item">
+                        <span class="step-num">3</span>
+                        <span>验证打款金额</span>
+                    </div>
+                    <div class="step-line"></div>
+                    <div class="step-item">
+                        <span class="step-num">4</span>
+                        <span>完成认证</span>
+                    </div>
+                </div>
+
+                <div style="background:#f8f9fc;border-radius:10px;padding:24px;text-align:center;">
+                    <p style="font-size:14px;color:#666;margin-bottom:12px;">我们已向您的对公账户发起小额打款</p>
+                    <p style="font-size:13px;color:#888;line-height:1.7;">
+                        请留意银行入账通知，打款账户名显示为<br>
+                        <strong style="color:#333;">缘启智慧（北京）科技有限公司</strong>
+                    </p>
+                    <div style="margin-top:16px;padding:14px;background:#fff;border-radius:8px;border:1px solid #e8e8e8;">
+                        <p style="font-size:12px;color:#999;">预计到账时间：1-3个工作日</p>
+                    </div>
+                </div>
+
+                <button class="btn-submit" style="margin-top:20px;" onclick="goTransferVerify()">下一步：验证打款金额</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal: 对公打款 - 验证金额 -->
+    <div class="modal-overlay" id="modalTransferVerify">
+        <div class="modal-container">
+            <div class="modal-header">
+                <button class="modal-back-btn" onclick="goBackTo('modalTransferPay')">‹</button>
+                <h2 class="modal-title">企业对公打款认证</h2>
+                <button class="modal-close-btn" onclick="closeAllModals()">✕</button>
+            </div>
+            <div class="modal-body">
+                <div class="step-indicator">
+                    <div class="step-item completed">
+                        <span class="step-num">✓</span>
+                        <span>填写认证信息</span>
+                    </div>
+                    <div class="step-line"></div>
+                    <div class="step-item completed">
+                        <span class="step-num">✓</span>
+                        <span>对公打款</span>
+                    </div>
+                    <div class="step-line"></div>
+                    <div class="step-item active">
+                        <span class="step-num">3</span>
+                        <span>验证打款金额</span>
+                    </div>
+                    <div class="step-line"></div>
+                    <div class="step-item">
+                        <span class="step-num">4</span>
+                        <span>完成认证</span>
+                    </div>
+                </div>
+
+                <div class="amount-verify-box">
+                    <p>请输入收到的打款金额（单位：元），用于验证账户归属权</p>
+                    <input type="text" placeholder="0.00" id="transferAmountInput" oninput="checkTransferAmount()">
+                </div>
+
+                <div style="display:flex;gap:10px;">
+                    <button class="btn-submit" id="transferVerifyBtn" disabled onclick="checkTransferCertResult()" style="flex:1;">提交验证</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal: 对公打款 - 完成 -->
+    <div class="modal-overlay" id="modalTransferSuccess">
+        <div class="modal-container">
+            <div class="modal-header">
+                <h2 class="modal-title">企业对公打款认证</h2>
+                <button class="modal-close-btn" onclick="closeAllModals();">✕</button>
+            </div>
+            <div class="modal-body">
+                <!-- 审核中状态（默认显示） -->
+                <div id="transferResultPending">
+                    <div class="step-indicator">
+                        <div class="step-item completed"><span class="step-num">✓</span><span>填写认证信息</span></div>
+                        <div class="step-line"></div>
+                        <div class="step-item completed"><span class="step-num">✓</span><span>对公打款</span></div>
+                        <div class="step-line"></div>
+                        <div class="step-item completed"><span class="step-num">✓</span><span>验证打款金额</span></div>
+                        <div class="step-line"></div>
+                        <div class="step-item active"><span class="step-num">4</span><span>完成认证</span></div>
+                    </div>
+
+                    <div class="cert-result-pending">
+                        <h3>认证提交成功，请耐心等待审核</h3>
+                        <p style="margin-top:8px;">您提交的企业对公打款认证资料已受理。</p>
+                        <p style="color:#5865f2;font-weight:500;margin-top:6px;">认证结果将在 3 个工作日内 出具</p>
+                        <p style="color:#aaa;font-size:13px;margin-top:12px;">届时我们将以短信/站内信通知您认证结果。<br>如有疑问请联系客服。</p>
+                        <button class="btn-submit" style="margin-top:24px;width:auto;padding:10px 48px;" onclick="closeAllModals();markCertPending();">我知道了</button>
+                    </div>
+                </div>
+
+                <!-- 成功状态（隐藏） -->
+                <div id="transferResultSuccess" style="display:none;">
+                    <div class="step-indicator">
+                        <div class="step-item completed"><span class="step-num">✓</span><span>填写认证信息</span></div>
+                        <div class="step-line"></div>
+                        <div class="step-item completed"><span class="step-num">✓</span><span>对公打款</span></div>
+                        <div class="step-line"></div>
+                        <div class="step-item completed"><span class="step-num">✓</span><span>验证打款金额</span></div>
+                        <div class="step-line"></div>
+                        <div class="step-item active"><span class="step-num">4</span><span>完成认证</span></div>
+                    </div>
+
+                    <div class="success-section">
+                        <h3>企业认证成功！</h3>
+                        <p>您的企业已通过对公打款认证</p>
+                        <button class="btn-submit" style="margin-top:24px;width:auto;padding:10px 48px;" onclick="closeAllModals();markCertified();">确定</button>
+                    </div>
+                </div>
+
+                <!-- 失败状态（隐藏） -->
+                <div id="transferResultFail" style="display:none;">
+                    <div class="step-indicator">
+                        <div class="step-item completed"><span class="step-num">✓</span><span>填写认证信息</span></div>
+                        <div class="step-line"></div>
+                        <div class="step-item completed"><span class="step-num">✓</span><span>对公打款</span></div>
+                        <div class="step-line"></div>
+                        <div class="step-item active" style="color:#ff4d4f;"><span class="step-num" style="background:#ff4d4f;">3</span><span>验证打款金额</span></div>
+                        <div class="step-line"></div>
+                        <div class="step-item"><span class="step-num">4</span><span>完成认证</span></div>
+                    </div>
+
+                    <div class="cert-result-fail">
+                        <h3>您未认证成功</h3>
+                        <p>对公打款验证未通过。</p>
+                        <p style="color:#aaa;font-size:13px;margin-top:12px;">可能原因：打款金额不匹配、账户信息错误等<br>请重试或联系客服处理。</p>
+                        <button class="btn-submit" style="margin-top:24px;width:auto;padding:10px 32px;background:#5865f2;" onclick="goBackTo('modalTransferVerify');document.getElementById('transferResultFail').style.display='none';document.getElementById('transferResultPending').style.display='block';document.getElementById('transferResultSuccess').style.display='none';">重新验证</button>
+                        <button onclick="closeAllModals();" style="margin-top:10px;width:auto;padding:8px 24px;border:none;background:none;color:#999;font-size:14px;cursor:pointer;">稍后再说</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal: 开票需实名认证 -->
+    <div class="modal-overlay" id="modalInvoiceNeedCert">
+        <div class="modal-container" style="width:400px;">
+            <div class="modal-header" style="justify-content:flex-end;">
+                <button class="modal-close-btn" onclick="closeAllModals()">✕</button>
+            </div>
+            <div class="modal-body" style="text-align:center;padding:32px 28px 36px;">
+                <h3 style="font-size:18px;font-weight:600;color:#1a1a2e;margin-bottom:10px;">请先完成实名认证</h3>
+                <p style="font-size:14px;color:#888;margin-bottom:24px;line-height:1.6;">根据相关规定，您需要先完成实名认证后才能申请开具发票。</p>
+                <button class="btn-submit" onclick="goToCertFromInvoice()" style="width:auto;padding:10px 40px;">去实名认证</button>
+                <button onclick="closeAllModals()" style="margin-top:12px;width:auto;background:none;border:none;color:#999;font-size:14px;cursor:pointer;">稍后再说</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // ===== State Management =====
+        let isCertified = false;
+        let memberType = 'normal'; // normal | professional | enterprise
+
+        function setMemberType(type) {
+            memberType = type;
+            updateCertButton();
+            
+            // Show hint
+            const types = { normal: '普通会员', professional: '专业会员', enterprise: '企业会员' };
+            console.log(`当前切换为: ${types[type]}`);
+        }
+
+        // ===== Update Cert Button State =====
+        function updateCertButton() {
+            const btn = document.getElementById('certBtn');
+            if (isCertified) {
+                btn.className = 'cert-btn cert-btn-done';
+                btn.textContent = '已实名';
+                btn.onclick = null;
+                btn.style.cursor = 'not-allowed';
+            } else if (memberType === 'professional') {
+                // 专业会员默认已实名
+                btn.className = 'cert-btn cert-btn-done';
+                btn.textContent = '已实名';
+                btn.onclick = null;
+                btn.style.cursor = 'not-allowed';
+            } else if (memberType === 'normal' || memberType === 'enterprise') {
+                btn.className = 'cert-btn cert-btn-active';
+                btn.textContent = '去实名认证';
+                btn.onclick = openCertModal;
+                btn.style.cursor = 'pointer';
+            }
+            updateInvoiceButton();
+        }
+
+        // ===== Open Cert Modal =====
+        function openCertModal() {
+            showModal('modalTypeSelect');
+        }
+
+        // ===== Mark as Certified / Pending =====
+        function markCertified() {
+            isCertified = true;
+            updateCertButton();
+            updateInvoiceButton();
+        }
+
+        function markCertPending() {
+            // For transfer (对公打款), show pending state - not yet certified
+            const btn = document.getElementById('certBtn');
+            btn.className = 'cert-btn cert-btn-done';
+            btn.textContent = '审核中';
+            btn.onclick = null;
+            btn.style.cursor = 'not-allowed';
+            btn.style.background = '#fff7e6';
+            btn.style.color = '#d48806';
+            btn.style.border = '1px solid #ffe58f';
+        }
+
+        // ===== Form Validation Helpers =====
+        function showError(fieldId, errorId) {
+            document.getElementById(fieldId).classList.add('form-input-error');
+            document.getElementById(errorId).classList.add('show');
+        }
+
+        function clearError(fieldId, errorId) {
+            document.getElementById(fieldId).classList.remove('form-input-error');
+            document.getElementById(errorId).classList.remove('show');
+        }
+
+        function clearAllPersonalErrors() {
+            clearError('personalName', 'personalNameError');
+            clearError('personalIdNumber', 'personalIdNumberError');
+        }
+
+        function clearAllLegalPersonErrors() {
+            clearError('entNameLP', 'entNameLPError');
+            clearError('entCreditCodeLP', 'entCreditCodeLPError');
+            clearError('entLegalNameLP', 'entLegalNameLPError');
+            clearError('entLegalIdLP', 'entLegalIdLPError');
+        }
+
+        function clearAllTransferErrors() {
+            clearError('entNameTR', 'entNameTRError');
+            clearError('entCreditCodeTR', 'entCreditCodeTRError');
+            clearError('entLegalNameTR', 'entLegalNameTRError');
+        }
+
+        // ===== Personal Form Validation =====
+        function validatePersonalForm() {
+            let valid = true;
+            clearAllPersonalErrors();
+
+            const name = document.getElementById('personalName').value.trim();
+            if (!name) { showError('personalName', 'personalNameError'); valid = false; }
+            
+            const idNumber = document.getElementById('personalIdNumber').value.trim();
+            if (!idNumber) { showError('personalIdNumber', 'personalIdNumberError'); valid = false; }
+
+            return valid;
+        }
+
+        function checkPersonalSubmitBtnState() {
+            const agreeChecked = document.getElementById('personalAgree').checked;
+            const name = document.getElementById('personalName').value.trim();
+            const idNumber = document.getElementById('personalIdNumber').value.trim();
+            const btn = document.getElementById('personalSubmitBtn');
+            btn.disabled = !(agreeChecked && name && idNumber);
+        }
+
+        function submitPersonalForm() {
+            if (!validatePersonalForm()) return;
+
+            const agreeChecked = document.getElementById('personalAgree').checked;
+            if (!agreeChecked) {
+                alert('请阅读并同意认证协议后再提交。');
+                return;
+            }
+
+            goPersonalQRCode();
+        }
+
+        // ===== Invoice Logic =====
+        const MIN_INVOICE_AMOUNT = 50;
+
+        function getSelectedOrderInfo() {
+            const rows = document.querySelectorAll('#orderTableBody tr');
+            let count = 0;
+            let total = 0;
+            rows.forEach(row => {
+                const cb = row.querySelector('.row-checkbox');
+                if (cb && cb.checked) {
+                    count++;
+                    total += parseFloat(row.getAttribute('data-price')) || 0;
+                }
+            });
+            return { count, total };
+        }
+
+        function updateOrderSelectionUI() {
+            const { count, total } = getSelectedOrderInfo();
+
+            // Update footer
+            document.getElementById('selectedCountFooter').textContent = count;
+            document.getElementById('totalAmountFooter').textContent = `¥${total.toFixed(2)}`;
+
+            // Update badge in toolbar
+            document.getElementById('selectedCountBadge').textContent = count;
+
+            // Update select all checkbox state (indeterminate)
+            const allCbs = document.querySelectorAll('.row-checkbox');
+            const checkedCount = Array.from(allCbs).filter(cb => cb.checked).length;
+            const selectAllCb = document.getElementById('selectAllCheckbox');
+            if (checkedCount === 0) {
+                selectAllCb.checked = false;
+                selectAllCb.indeterminate = false;
+            } else if (checkedCount === allCbs.length) {
+                selectAllCb.checked = true;
+                selectAllCb.indeterminate = false;
+            } else {
+                selectAllCb.checked = false;
+                selectAllCb.indeterminate = true;
+            }
+
+            // Update invoice button state based on amount
+            updateInvoiceButton();
+        }
+
+        function handleApplyInvoice() {
+            const { count, total } = getSelectedOrderInfo();
+
+            if (count === 0) {
+                alert('请先选择需要开票的订单。');
+                return;
+            }
+
+            if (!isCertified && memberType !== 'professional') {
+                showModal('modalInvoiceNeedCert');
+                return;
+            }
+
+            if (total < MIN_INVOICE_AMOUNT) {
+                alert(`开票最低金额为 ¥${MIN_INVOICE_AMOUNT}，当前已选 ${count} 个订单，合计金额为 ¥${total.toFixed(2)}，请选择更多订单。`);
+                return;
+            }
+
+            alert(`申请开票成功！\n已选择 ${count} 个订单，合计金额：¥${total.toFixed(2)}`);
+        }
+
+        function cancelAllSelection() {
+            document.querySelectorAll('.row-checkbox').forEach(cb => cb.checked = false);
+            document.getElementById('selectAllCheckbox').checked = false;
+            document.getElementById('selectAllCheckbox').indeterminate = false;
+            updateOrderSelectionUI();
+        }
+
+        function refreshOrders() {
+            // Simulate refresh
+            location.reload();
+        }
+
+        function goToCertFromInvoice() {
+            closeAllModals();
+            openCertModal();
+        }
+
+        function updateInvoiceButton() {
+            const btn = document.getElementById('applyInvoiceBtn');
+            const { total } = getSelectedOrderInfo();
+            
+            if (!isCertified && memberType !== 'professional') {
+                btn.style.background = '#e0e0e0';
+                btn.style.color = '#999';
+                btn.style.cursor = 'not-allowed';
+                btn.title = '请先完成实名认证后再开票';
+            } else {
+                if (total < MIN_INVOICE_AMOUNT && total > 0) {
+                    btn.style.background = '#e8e8e8';
+                    btn.style.color = '#bbb';
+                    btn.title = `开票最低金额 ¥${MIN_INVOICE_AMOUNT}`;
+                } else if (total === 0) {
+                    btn.style.background = '#e8e8e8';
+                    btn.style.color = '#bbb';
+                    btn.title = '请先选择订单';
+                } else {
+                    btn.style.background = '';
+                    btn.style.color = '';
+                    btn.style.cursor = 'pointer';
+                    btn.title = '';
+                }
+            }
+        }
+
+        // ===== Modal Helpers =====
+        function showModal(id) {
+            document.querySelectorAll('.modal-overlay').forEach(m => m.classList.remove('show'));
+            document.getElementById(id).classList.add('show');
+        }
+
+        function closeAllModals() {
+            document.querySelectorAll('.modal-overlay').forEach(m => m.classList.remove('show'));
+        }
+
+        function goBackTo(id) {
+            // Hide all, show target
+            document.querySelectorAll('.modal-overlay').forEach(m => m.classList.remove('show'));
+            document.getElementById(id).classList.add('show');
+        }
+
+        // ===== Personal Certification Flow =====
+        function goPersonalCert() {
+            showModal('modalPersonalForm');
+            clearAllPersonalErrors();
+            document.getElementById('personalName').value = '';
+            document.getElementById('personalIdNumber').value = '';
+            document.getElementById('personalAgree').checked = false;
+            checkPersonalSubmitBtnState();
+        }
+
+        function goPersonalQRCode() {
+            showModal('modalPersonalQR');
+        }
+
+        // Simulate Alipay certification callback check
+        function checkPersonalCertResult() {
+            const btn = event.target;
+            btn.disabled = true;
+            btn.textContent = '验证中...';
+
+            // Simulate async certification result from Alipay callback
+            fetchCertificationResult().then(result => {
+                goPersonalSuccess(result);
+                btn.disabled = false;
+                btn.textContent = '我已完成认证';
+            });
+        }
+
+        /**
+         * Simulates calling backend API to get real Alipay certification callback result.
+         * In production, this would be a real API call checking the actual cert status.
+         */
+        function fetchCertificationResult() {
+            return new Promise(resolve => {
+                setTimeout(() => {
+                    // Read debug panel selection
+                    const debugSelect = document.getElementById('personalCertResultSelect');
+                    const forcedResult = debugSelect ? debugSelect.value : '';
+                    
+                    if (forcedResult === 'true') {
+                        resolve(true);
+                        if (debugSelect) debugSelect.value = '';
+                        return;
+                    }
+                    if (forcedResult === 'false') {
+                        resolve(false);
+                        if (debugSelect) debugSelect.value = '';
+                        return;
+                    }
+                    
+                    // Default: simulate random outcome (70% pass rate)
+                    resolve(Math.random() < 0.7);
+                }, 1500); // Simulate network delay
+            });
+        }
+
+        function goPersonalSuccess(success) {
+            // Reset result states
+            document.getElementById('personalResultSuccess').style.display = success ? 'block' : 'none';
+            document.getElementById('personalResultFail').style.display = success ? 'none' : 'block';
+            showModal('modalPersonalSuccess');
+            
+            if (success) {
+                markCertified();
+            }
+        }
+
+        // Personal form agreement & input check
+        document.addEventListener('DOMContentLoaded', () => {
+            const agreeCheckbox = document.getElementById('personalAgree');
+            const nameInput = document.getElementById('personalName');
+            const idInput = document.getElementById('personalIdNumber');
+
+            // Bind events for all fields + agreement
+            agreeCheckbox && agreeCheckbox.addEventListener('change', checkPersonalSubmitBtnState);
+            nameInput && nameInput.addEventListener('input', checkPersonalSubmitBtnState);
+            idInput && idInput.addEventListener('input', checkPersonalSubmitBtnState);
+
+            // Initial state
+            checkPersonalSubmitBtnState();
+        });
+
+        // ===== Enterprise Certification - Method Select =====
+        function goEnterpriseCert() {
+            showModal('modalEnterpriseMethod');
+        }
+
+        // ===== Legal Person Form Validation =====
+        function validateLegalPersonForm() {
+            let valid = true;
+            clearAllLegalPersonErrors();
+
+            const entName = document.getElementById('entNameLP').value.trim();
+            if (!entName) { showError('entNameLP', 'entNameLPError'); valid = false; }
+
+            const creditCode = document.getElementById('entCreditCodeLP').value.trim();
+            if (!creditCode) { showError('entCreditCodeLP', 'entCreditCodeLPError'); valid = false; }
+
+            const legalName = document.getElementById('entLegalNameLP').value.trim();
+            if (!legalName) { showError('entLegalNameLP', 'entLegalNameLPError'); valid = false; }
+
+            const legalId = document.getElementById('entLegalIdLP').value.trim();
+            if (!legalId) { showError('entLegalIdLP', 'entLegalIdLPError'); valid = false; }
+
+            // Update submit button state
+            const btn = document.getElementById('legalPersonSubmitBtn');
+            if (btn) btn.disabled = !valid;
+
+            return valid;
+        }
+
+        function submitLegalPersonForm() {
+            if (!validateLegalPersonForm()) return;
+            goLegalFaceRecognition();
+        }
+
+        function goEntLegalPerson() {
+            showModal('modalLegalPersonForm');
+            clearAllLegalPersonErrors();
+            // Reset form fields for demo
+            document.getElementById('entNameLP').value = '';
+            document.getElementById('entCreditCodeLP').value = '';
+            document.getElementById('entLegalNameLP').value = '';
+            document.getElementById('entLegalIdLP').value = '';
+            // Reset submit button
+            const btn = document.getElementById('legalPersonSubmitBtn');
+            if (btn) btn.disabled = true;
+        }
+
+        function goEntTransfer() {
+            showModal('modalTransferForm');
+        }
+
+        // ===== Legal Person Face Recognition Flow =====
+
+        /**
+         * Simulates Alipay face recognition callback check for legal person.
+         */
+        function checkLegalCertResult() {
+            const btn = event.target;
+            btn.disabled = true;
+            btn.textContent = '验证中...';
+
+            fetchLegalFaceCertificationResult().then(result => {
+                goLegalSuccess(result);
+                btn.disabled = false;
+                btn.textContent = '我已完成人脸识别';
+            });
+        }
+
+        /**
+         * Simulates calling backend API to get legal person face recognition result from Alipay callback.
+         */
+        function fetchLegalFaceCertificationResult() {
+            return new Promise(resolve => {
+                setTimeout(() => {
+                    const debugSelect = document.getElementById('legalCertResultSelect');
+                    const forcedResult = debugSelect ? debugSelect.value : '';
+
+                    if (forcedResult === 'true') {
+                        resolve(true);
+                        if (debugSelect) debugSelect.value = '';
+                        return;
+                    }
+                    if (forcedResult === 'false') {
+                        resolve(false);
+                        if (debugSelect) debugSelect.value = '';
+                        return;
+                    }
+
+                    // Default: simulate random outcome (70% pass rate)
+                    resolve(Math.random() < 0.7);
+                }, 1500);
+            });
+        }
+
+        function goLegalFaceRecognition() {
+            showModal('modalLegalFace');
+        }
+
+        function goLegalSuccess(success) {
+            // Reset result states
+            document.getElementById('legalResultSuccess').style.display = success ? 'block' : 'none';
+            document.getElementById('legalResultFail').style.display = success ? 'none' : 'block';
+            showModal('modalLegalSuccess');
+
+            if (success) {
+                markCertified();
+            }
+        }
+
+        // ===== Transfer (对公打款) Flow =====
+        
+        // Transfer Form Validation
+        function validateTransferForm() {
+            let valid = true;
+            clearAllTransferErrors();
+
+            const entName = document.getElementById('entNameTR').value.trim();
+            if (!entName) { showError('entNameTR', 'entNameTRError'); valid = false; }
+
+            const creditCode = document.getElementById('entCreditCodeTR').value.trim();
+            if (!creditCode) { showError('entCreditCodeTR', 'entCreditCodeTRError'); valid = false; }
+
+            const legalName = document.getElementById('entLegalNameTR').value.trim();
+            if (!legalName) { showError('entLegalNameTR', 'entLegalNameTRError'); valid = false; }
+
+            // Update submit button state
+            const btn = document.getElementById('transferSubmitBtn');
+            if (btn) btn.disabled = !valid;
+
+            return valid;
+        }
+
+        function submitTransferForm() {
+            if (!validateTransferForm()) return;
+            goTransferPayment();
+        }
+
+        function goTransferPayment() {
+            showModal('modalTransferPay');
+        }
+
+        function goTransferVerify() {
+            showModal('modalTransferVerify');
+            // Reset amount input
+            const amountInput = document.getElementById('transferAmountInput');
+            if (amountInput) amountInput.value = '';
+            const verifyBtn = document.getElementById('transferVerifyBtn');
+            if (verifyBtn) verifyBtn.disabled = true;
+            const failBtn = document.getElementById('transferFailDemoBtn');
+            if (failBtn) failBtn.disabled = true;
+        }
+
+        function goEntTransfer() {
+            showModal('modalTransferForm');
+            clearAllTransferErrors();
+            // Reset form
+            document.getElementById('entNameTR').value = '';
+            document.getElementById('entCreditCodeTR').value = '';
+            document.getElementById('entLegalNameTR').value = '';
+            const btn = document.getElementById('transferSubmitBtn');
+            if (btn) btn.disabled = true;
+        }
+
+        function checkTransferAmount() {
+            const input = document.getElementById('transferAmountInput');
+            const btn = document.getElementById('transferVerifyBtn');
+            const failBtn = document.getElementById('transferFailDemoBtn');
+            const hasValue = input.value.trim().length > 0 && !isNaN(parseFloat(input.value));
+            btn.disabled = !hasValue;
+            failBtn.disabled = !hasValue;
+        }
+
+        // For 对公打款: result depends on backend callback
+        // - No callback yet → 审核中 (pending)
+        // - Callback success → 成功 (success)
+        // - Callback fail → 失败 (fail)
+
+        /**
+         * Simulates calling backend API to check transfer certification callback result.
+         * Returns: 'pending' | 'success' | 'fail'
+         */
+        function fetchTransferCertResult() {
+            return new Promise(resolve => {
+                setTimeout(() => {
+                    const debugSelect = document.getElementById('transferCertResultSelect');
+                    const forcedResult = debugSelect ? debugSelect.value : '';
+
+                    if (forcedResult === 'success') {
+                        resolve('success');
+                        if (debugSelect) debugSelect.value = '';
+                        return;
+                    }
+                    if (forcedResult === 'fail') {
+                        resolve('fail');
+                        if (debugSelect) debugSelect.value = '';
+                        return;
+                    }
+                    if (forcedResult === 'pending') {
+                        resolve('pending');
+                        if (debugSelect) debugSelect.value = '';
+                        return;
+                    }
+
+                    // Default: simulate random outcome
+                    const rand = Math.random();
+                    if (rand < 0.3) resolve('pending');      // 30% no callback yet
+                    else if (rand < 0.8) resolve('success');   // 50% pass
+                    else resolve('fail');                      // 20% fail
+                }, 1500);
+            });
+        }
+
+        function checkTransferCertResult() {
+            const btn = document.getElementById('transferVerifyBtn');
+            btn.disabled = true;
+            btn.textContent = '验证中...';
+
+            fetchTransferCertResult().then(result => {
+                goTransferByResult(result);
+
+                btn.disabled = false;
+                btn.textContent = '提交验证';
+            });
+        }
+
+        function goTransferByResult(result) {
+            // Reset all result states
+            document.getElementById('transferResultPending').style.display = (result === 'pending') ? 'block' : 'none';
+            document.getElementById('transferResultSuccess').style.display = (result === 'success') ? 'block' : 'none';
+            document.getElementById('transferResultFail').style.display = (result === 'fail') ? 'block' : 'none';
+            showModal('modalTransferSuccess');
+
+            if (result === 'success') {
+                markCertified();
+            } else if (result === 'pending') {
+                markCertPending();
+            }
+            // fail → status stays uncertified
+        }
+
+        // ===== Click overlay to close =====
+        document.querySelectorAll('.modal-overlay').forEach(modal => {
+            modal.addEventListener('click', (e) => {
+                if (e.target === modal) {
+                    closeAllModals();
+                }
+            });
+        });
+
+        // ===== ESC to close modals =====
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') {
+                closeAllModals();
+            }
+        });
+
+        // ===== Initialize =====
+        updateCertButton();
+        
+        // Bind order selection events
+        document.getElementById('selectAllCheckbox').addEventListener('change', function() {
+            const checked = this.checked;
+            document.querySelectorAll('.row-checkbox').forEach(cb => cb.checked = checked);
+            updateOrderSelectionUI();
+        });
+
+        document.querySelectorAll('.row-checkbox').forEach(cb => {
+            cb.addEventListener('change', () => updateOrderSelectionUI());
+        });
+
+        // Bind buttons
+        document.getElementById('applyInvoiceBtn').onclick = handleApplyInvoice;
+        document.getElementById('cancelSelectBtn').onclick = cancelAllSelection;
+
+        // Initial UI calculation
+        updateOrderSelectionUI();
+
+        // Demo: Add a small control panel in console for testing different member types
+        window.setMemberType = setMemberType;
+        window.resetCert = () => { 
+            isCertified = false; 
+            updateCertButton(); 
+            // Also reset button text/style completely
+            const btn = document.getElementById('certBtn');
+            btn.style.background = '';
+            btn.style.border = '';
+        };
+        window.setPending = () => { markCertPending(); };
+    </script>
+
+    <!-- Debug controls at bottom of page for easy testing -->
+    <div style="position:fixed;bottom:12px;right:12px;background:#fff;border:1px solid #ddd;border-radius:10px;padding:12px 16px;z-index:100;font-size:12px;box-shadow:0 2px 12px rgba(0,0,0,0.1);max-width:300px;">
+        <div style="font-weight:600;margin-bottom:6px;color:#333;">🛠 调试面板（测试用）</div>
+        <div style="margin-bottom:4px;">
+            <label>会员类型：</label>
+            <select onchange="setMemberType(this.value)" style="padding:2px 6px;border:1px solid #ddd;border-radius:4px;width:130px;">
+                <option value="normal">普通会员（需认证）</option>
+                <option value="professional">专业会员（默认已实名）</option>
+                <option value="enterprise">企业会员（需认证）</option>
+            </select>
+        </div>
+        <div style="margin-bottom:4px;display:flex;align-items:center;gap:4px;">
+            <label>个人认证结果：</label>
+            <select id="personalCertResultSelect" style="padding:2px 6px;border:1px solid #ddd;border-radius:4px;width:120px;font-size:11px;">
+                <option value="">随机（70%通过）</option>
+                <option value="true">模拟通过</option>
+                <option value="false">模拟失败</option>
+            </select>
+        </div>
+        <div style="margin-bottom:4px;display:flex;align-items:center;gap:4px;">
+            <label>法人认证结果：</label>
+            <select id="legalCertResultSelect" style="padding:2px 6px;border:1px solid #ddd;border-radius:4px;width:120px;font-size:11px;">
+                <option value="">随机（70%通过）</option>
+                <option value="true">模拟通过</option>
+                <option value="false">模拟失败</option>
+            </select>
+        </div>
+        <div style="margin-bottom:4px;display:flex;align-items:center;gap:4px;">
+            <label>打款验证结果：</label>
+            <select id="transferCertResultSelect" style="padding:2px 6px;border:1px solid #ddd;border-radius:4px;width:120px;font-size:11px;">
+                <option value="">随机（30%审核中/50%通过/20%失败）</option>
+                <option value="pending">模拟审核中</option>
+                <option value="success">模拟通过</option>
+                <option value="fail">模拟失败</option>
+            </select>
+        </div>
+        <div style="display:flex;gap:4px;margin-top:6px;flex-wrap:wrap;">
+            <button onclick="window.resetCert();" style="padding:3px 8px;border:1px solid #ddd;border-radius:4px;background:#fff;cursor:pointer;font-size:11px;">重置认证</button>
+            <button onclick="window.setPending();" style="padding:3px 8px;border:1px solid #d48806;border-radius:4px;background:#fff7e6;cursor:pointer;font-size:11px;color:#d48806;">设为审核中</button>
+        </div>
+    </div>
+</body>
+</html>
