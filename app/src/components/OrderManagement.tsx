@@ -10,6 +10,7 @@ interface OrderManagementProps {
   memberLevel?: MemberLevel
   certInfo?: CertificationInfo
   onGoToCert?: () => void
+  alreadyInvoicedAmount?: number   // 已开票金额（V4.1 新增）
 }
 
 export default function OrderManagement({
@@ -19,6 +20,7 @@ export default function OrderManagement({
   memberLevel,
   certInfo,
   onGoToCert,
+  alreadyInvoicedAmount = 0,
 }: OrderManagementProps) {
   const [statusFilter, setStatusFilter] = useState('全部')
   const [searchKeyword, setSearchKeyword] = useState('')
@@ -279,6 +281,7 @@ export default function OrderManagement({
           memberLevel={memberLevel}
           certInfo={certInfo}
           onGoToCert={onGoToCert}
+          alreadyInvoicedAmount={alreadyInvoicedAmount}
         />
       )}
     </div>

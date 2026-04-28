@@ -20,6 +20,7 @@ interface InvoiceDialogProps {
   onClose: () => void
   selectedAmount: number
   selectedCount: number
+  alreadyInvoicedAmount?: number   // 已开票金额（V4.1 新增）
   memberLevel?: MemberLevel
   certInfo?: CertificationInfo
   onGoToCert?: () => void
@@ -29,15 +30,26 @@ export default function InvoiceDialog({
   open,
   onClose,
   selectedAmount,
+  alreadyInvoicedAmount = 0,
   memberLevel = '普通会员',
   certInfo,
   onGoToCert,
 }: InvoiceDialogProps) {
-  const [invoiceAmount, setInvoiceAmount] = useState(selectedAmount.toFixed(2))
+  // 可开票金额 = 选中金额 - 已开票金额
+  const availableAmount = Math.max(0, selectedAmount - alreadyInvoicedAmount)
+  const [invoiceAmount, setInvoiceAmount] = useState(availableAmount.toFixed(2))
   const [feeItem, setFeeItem] = useState('信息技术服务')
   const [feeSubType, setFeeSubType] = useState('会员订阅')
   const [invoiceType, setInvoiceType] = useState('增值税普通发票')
   const [emailAddress, setEmailAddress] = useState('')
+
+  // 抬头类型切换（个人会员可选个人/企业抬头）
+  const isEnterpriseMember = memberLevel === '企业会员'
+  const canSelectPayerType = !isEnterpriseMember && certInfo?.status === 'personal'
+  const [payerType, setPayerType] = useState<'personal' | 'enterprise'>('personal')
+  // 个人会员手动填写的企业抬头信息
+  const [customCompanyName, setCustomCompanyName] = useState('')
+  const [customTaxNo, setCustomTaxNo] = useState('')
 
   // 专票额外字段
   const [registeredAddress, setRegisteredAddress] = useState('')
@@ -60,6 +72,9 @@ export default function InvoiceDialog({
   const isSpecialInvoice = invoiceType === '增值税专用发票'
   const [submitting, setSubmitting] = useState(false)
 
+  const isPersonalPayer = certInfo?.status === 'personal' && !isEnterpriseMember && payerType === 'personal'
+  const isCustomEnterprisePayer = certInfo?.status === 'personal' && !isEnterpriseMember && payerType === 'enterprise'
+
   const handleSubmit = async () => {
     // 保存邮箱为默认值
     if (emailAddress) {
@@ -68,13 +83,17 @@ export default function InvoiceDialog({
 
     setSubmitting(true)
 
-    // 组装发票数据
-    const payerDisplay =
-      certInfo?.status === 'personal'
-        ? `${certInfo.personalName}（${certInfo.personalIdNo}）`
-        : certInfo?.status === 'enterprise'
-          ? `${certInfo.companyName}（税号：${certInfo.taxNo}）`
-          : '未认证'
+    // 组装抬头展示文字
+    let payerDisplay = ''
+    if (certInfo?.status === 'enterprise') {
+      payerDisplay = `${certInfo.companyName}（税号：${certInfo.taxNo}）`
+    } else if (isPersonalPayer) {
+      payerDisplay = `${certInfo.personalName}（${certInfo.personalIdNo}）`
+    } else if (isCustomEnterprisePayer) {
+      payerDisplay = `${customCompanyName}（税号：${customTaxNo}）`
+    } else {
+      payerDisplay = '未认证'
+    }
 
     const invoiceData = {
       amount: invoiceAmount,
@@ -143,11 +162,11 @@ export default function InvoiceDialog({
             <div className="flex items-baseline gap-1">
               <span className="text-sm text-gray-600">可开票金额</span>
               <span className="text-xl font-bold text-indigo-600">
-                ¥{Number(invoiceAmount).toFixed(2)}
+                ¥{availableAmount.toFixed(2)}
               </span>
             </div>
             <p className="text-xs text-gray-500">
-              累计已消费金额 ¥{(selectedAmount + Math.random() * 100).toFixed(2)} - 欠款 ¥0.00 - 累计已开票金额 ¥0.00
+              累计已消费金额 ¥{selectedAmount.toFixed(2)} - 已开票金额 ¥{alreadyInvoicedAmount.toFixed(2)} = 可开票金额 ¥{availableAmount.toFixed(2)}
             </p>
           </div>
 
@@ -162,7 +181,7 @@ export default function InvoiceDialog({
                 type="number"
                 step="0.01"
                 min="50"
-                max={selectedAmount}
+                max={availableAmount}
                 value={invoiceAmount}
                 onChange={(e) => setInvoiceAmount(e.target.value)}
                 placeholder="0.00"
@@ -219,22 +238,87 @@ export default function InvoiceDialog({
               <span className="text-red-500">*</span> 抬头信息
             </label>
 
-            {/* 已认证 - 展示认证信息 */}
-            {certInfo?.status === 'personal' && (
-              <>
-                <div className="w-full border border-indigo-200 bg-indigo-50/50 rounded-lg px-3 py-2.5 text-sm text-gray-700">
-                  {certInfo.personalName}（{certInfo.personalIdNo}）
-                </div>
-                <p className="text-xs text-gray-400 mt-1.5">个人会员抬头，已绑定实名认证信息</p>
-              </>
-            )}
-
+            {/* 企业会员：只能用企业认证信息（不可选） */}
             {certInfo?.status === 'enterprise' && (
               <>
                 <div className="w-full border border-indigo-200 bg-indigo-50/50 rounded-lg px-3 py-2.5 text-sm text-gray-700">
                   {certInfo.companyName}（税号：{certInfo.taxNo}）
                 </div>
-                <p className="text-xs text-gray-400 mt-1.5">企业会员抬头，已绑定企业认证信息</p>
+                <p className="text-xs text-gray-400 mt-1.5">企业会员仅可开具企业抬头发票</p>
+              </>
+            )}
+
+            {/* 个人已认证 + 企业会员不可选企业 → 个人认证但非企业会员 */}
+            {certInfo?.status === 'personal' && !isEnterpriseMember && (
+              <>
+                {/* 个人会员可选抬头类型 */}
+                <div className="flex gap-2 mb-2">
+                  <button
+                    onClick={() => setPayerType('personal')}
+                    className={`flex-1 px-3 py-2 rounded-lg text-sm font-medium transition-colors cursor-pointer ${
+                      payerType === 'personal'
+                        ? 'bg-indigo-100 text-indigo-700 border border-indigo-300'
+                        : 'bg-gray-50 text-gray-600 border border-gray-200 hover:bg-gray-100'
+                    }`}
+                  >
+                    个人抬头
+                  </button>
+                  <button
+                    onClick={() => {
+                      setPayerType('enterprise')
+                      // 切换到企业抬头时，如果是专票则自动切回普通发票
+                      if (invoiceType === '增值税专用发票') {
+                        setInvoiceType('增值税普通发票')
+                      }
+                    }}
+                    className={`flex-1 px-3 py-2 rounded-lg text-sm font-medium transition-colors cursor-pointer ${
+                      payerType === 'enterprise'
+                        ? 'bg-indigo-100 text-indigo-700 border border-indigo-300'
+                        : 'bg-gray-50 text-gray-600 border border-gray-200 hover:bg-gray-100'
+                    }`}
+                  >
+                    企业抬头
+                  </button>
+                </div>
+
+                {payerType === 'personal' ? (
+                  <>
+                    <div className="w-full border border-indigo-200 bg-indigo-50/50 rounded-lg px-3 py-2.5 text-sm text-gray-700">
+                      {certInfo.personalName}（{certInfo.personalIdNo}）
+                    </div>
+                    <p className="text-xs text-gray-400 mt-1.5">个人抬头，已绑定实名认证信息</p>
+                  </>
+                ) : (
+                  <>
+                    <div className="space-y-2">
+                      <input
+                        type="text"
+                        value={customCompanyName}
+                        onChange={(e) => setCustomCompanyName(e.target.value)}
+                        placeholder="请输入公司名称"
+                        className="w-full border border-gray-300 rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+                      />
+                      <input
+                        type="text"
+                        value={customTaxNo}
+                        onChange={(e) => setCustomTaxNo(e.target.value)}
+                        placeholder="请输入统一社会信用代码/税号"
+                        className="w-full border border-gray-300 rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+                      />
+                    </div>
+                    <p className="text-xs text-gray-400 mt-1.5">个人会员也可填写企业抬头发票信息</p>
+                  </>
+                )}
+              </>
+            )}
+
+            {/* 个人已认证 + 是企业会员（理论上不会出现，防御性处理） */}
+            {certInfo?.status === 'personal' && isEnterpriseMember && (
+              <>
+                <div className="w-full border border-indigo-200 bg-indigo-50/50 rounded-lg px-3 py-2.5 text-sm text-gray-700">
+                  {certInfo.personalName}（{certInfo.personalIdNo}）
+                </div>
+                <p className="text-xs text-gray-400 mt-1.5">个人抬头</p>
               </>
             )}
 
@@ -263,7 +347,16 @@ export default function InvoiceDialog({
             <select
               value={invoiceType}
               onChange={(e) => setInvoiceType(e.target.value)}
-              className="w-full border border-gray-300 rounded-lg px-3 py-2.5 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent appearance-none cursor-pointer"
+              disabled={
+                // 个人抬头（包括个人会员选了个人抬头）不可选专票
+                (certInfo?.status === 'personal' && !isEnterpriseMember && payerType === 'personal') ||
+                false
+              }
+              className={`w-full border rounded-lg px-3 py-2.5 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent appearance-none cursor-pointer ${
+                certInfo?.status === 'personal' && !isEnterpriseMember && payerType === 'personal'
+                  ? 'border-gray-200 bg-gray-50 text-gray-400 cursor-not-allowed'
+                  : 'border-gray-300'
+              }`}
               style={{
                 backgroundImage: `url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e")`,
                 backgroundPosition: 'right 12px center',
@@ -272,8 +365,16 @@ export default function InvoiceDialog({
               }}
             >
               <option>增值税普通发票</option>
-              <option>增值税专用发票</option>
+              {!(certInfo?.status === 'personal' && !isEnterpriseMember && payerType === 'personal') && (
+                <option>增值税专用发票</option>
+              )}
             </select>
+            {/* 个人抬头的专票限制提示 */}
+            {certInfo?.status === 'personal' && !isEnterpriseMember && payerType === 'personal' && (
+              <p className="mt-1.5 text-xs text-orange-600">
+                个人抬头仅支持增值税普通发票。如需开具专用发票，请选择企业抬头并填写完整的企业信息。
+              </p>
+            )}
           </div>
 
           {/* 普通发票提示 */}
@@ -399,7 +500,9 @@ export default function InvoiceDialog({
               certInfo.status === 'none' ||
               !emailAddress ||
               submitting ||
-              (isSpecialInvoice && (!registeredAddress || !registeredPhone || !bankName || !bankAccount))
+              (isSpecialInvoice && (!registeredAddress || !registeredPhone || !bankName || !bankAccount)) ||
+              // 个人会员选择企业抬头时需要填写企业名称和税号
+              (isCustomEnterprisePayer && (!customCompanyName || !customTaxNo))
             }
             className={`px-6 py-2.5 rounded-lg text-sm font-medium transition-colors cursor-pointer ${
               !submitting &&
@@ -407,7 +510,8 @@ export default function InvoiceDialog({
               certInfo &&
               certInfo.status !== 'none' &&
               emailAddress &&
-              (!isSpecialInvoice || (registeredAddress && registeredPhone && bankName && bankAccount))
+              (!isSpecialInvoice || (registeredAddress && registeredPhone && bankName && bankAccount)) &&
+              (!isCustomEnterprisePayer || (customCompanyName && customTaxNo))
                 ? 'bg-indigo-500 hover:bg-indigo-600 text-white'
                 : 'bg-indigo-200 text-white cursor-not-allowed'
             }`}

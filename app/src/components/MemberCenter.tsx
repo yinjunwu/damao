@@ -124,6 +124,7 @@ export default function MemberCenter() {
   // 切换以下值测试不同场景：'none' | 'personal' | 'enterprise'
   const [certStatus] = useState<CertificationInfo['status']>('personal')
   const [memberLevel] = useState<MemberLevel>('普通会员')
+  const [alreadyInvoicedAmount] = useState(50)   // 已开票金额（mock）
 
   const certInfo: CertificationInfo = certStatus === 'personal'
     ? { status: 'personal', personalName: '张三', personalIdNo: '110101199001011234' }
@@ -182,6 +183,7 @@ export default function MemberCenter() {
                 setSelectedOrderIds={setSelectedOrderIds}
                 memberLevel={memberLevel}
                 certInfo={certInfo}
+                alreadyInvoicedAmount={alreadyInvoicedAmount}
               />
             ) : (
               <EmptyPanel title={
